@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlinSerialization)
+
 }
 
 android {
@@ -51,7 +53,9 @@ android {
 
 dependencies {
 
-    implementation(("androidx.navigation:navigation-compose:2.8.0-beta04"))
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.kotlin.serialization)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
