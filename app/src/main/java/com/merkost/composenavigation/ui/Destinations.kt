@@ -5,28 +5,22 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
-import kotlinx.serialization.Serializable
 
-sealed class Destinations {
+sealed class Destinations(val route: String) {
 
-    @Serializable
-    data object HomeGraph
-
-    @Serializable
-    data object Home
-
-    @Serializable
-    data object Search
-
-    @Serializable
-    data object Profile
-
-    @Serializable
-    data class ProfileInfo(val userId: String)
+    data object HomeGraph: Destinations("home_graph")
+    data object Home: Destinations("home")
+    data object Search: Destinations("search")
+    data object Profile: Destinations("profile")
+    data object ProfileInfo: Destinations("profile_info?userId={userId}")
 }
 
-enum class BottomNavigation(val label: String, val icon: ImageVector, val route: Any) {
-    HOME("Home", Icons.Filled.Home, Destinations.Home),
-    SEARCH("Search", Icons.Filled.Search, Destinations.Search),
-    PROFILE("Profile", Icons.Filled.AccountCircle, Destinations.Profile);
+fun Destinations.ProfileInfo.buildRoute(userId: String): String {
+    return "profile_info?userId=$userId"
+}
+
+enum class BottomNavigation(val label: String, val icon: ImageVector, val route: String) {
+    HOME("Home", Icons.Filled.Home, Destinations.Home.route),
+    SEARCH("Search", Icons.Filled.Search, Destinations.Search.route),
+    PROFILE("Profile", Icons.Filled.AccountCircle, Destinations.Profile.route);
 }

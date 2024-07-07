@@ -19,11 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.toRoute
+import androidx.navigation.navArgument
 import com.merkost.composenavigation.ui.BottomNavigation
 import com.merkost.composenavigation.ui.Destinations
+import com.merkost.composenavigation.ui.buildRoute
 import com.merkost.composenavigation.ui.screens.HomeScreen
 import com.merkost.composenavigation.ui.screens.ProfileInfoScreen
 import com.merkost.composenavigation.ui.theme.ComposeTypeSafeNavigationTheme
@@ -37,18 +39,17 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController()
 
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route ?: BottomNavigation.HOME.route
+
                 Scaffold(
                     bottomBar = {
                         BottomAppBar {
                             BottomNavigation.entries
                                 .forEachIndexed { index, navigationItem ->
 
-                                    val isSelected by remember {
-                                        mutableStateOf(false)
-                                    }
-
                                     NavigationBarItem(
-                                        selected = isSelected,
+                                        selected = currentRoute == navigationItem.route,
                                         label = { Text(navigationItem.label) },
                                         icon = {
                                             Icon(
@@ -69,32 +70,44 @@ class MainActivity : ComponentActivity() {
                             .fillMaxSize()
                             .padding(it),
                         navController = navController,
-                        startDestination = Destinations.HomeGraph
+                        startDestination = Destinations.HomeGraph.route
                     ) {
-                        navigation<Destinations.HomeGraph>(
-                            startDestination = Destinations.Home,
+                        navigation(
+                            route = Destinations.HomeGraph.route,
+                            startDestination = Destinations.Home.route,
                         ) {
 
-                            composable<Destinations.Home> {
+                            composable(
+                                route = Destinations.Home.route
+                            ) {
                                 HomeScreen(
                                     toProfileScreen = {
-                                        navController.navigate(Destinations.ProfileInfo("101"))
+                                        navController.navigate(Destinations.ProfileInfo.buildRoute("101"))
                                     }
                                 )
                             }
 
-                            composable<Destinations.Search> {
+                            composable(
+                                route = Destinations.Search.route
+                            ) {
                                 Greeting("Search")
                             }
 
-                            composable<Destinations.Profile> { backStackEntry ->
+                            composable(
+                                route = Destinations.Profile.route
+                            ) { backStackEntry ->
                                 Greeting("Profile")
                             }
                         }
 
-                        composable<Destinations.ProfileInfo> { backStackEntry ->
-                            val profileInfo = backStackEntry.toRoute<Destinations.ProfileInfo>()
-                            ProfileInfoScreen(userId = profileInfo.userId)
+                        composable(
+                            route = Destinations.ProfileInfo.route,
+                            arguments = listOf(
+                                navArgument("userId") { defaultValue = "" }
+                            )
+                        ) { backStackEntry ->
+                            val userId = backStackEntry.arguments?.getString("userId")
+                            ProfileInfoScreen(userId = userId)
                         }
                     }
                 }
