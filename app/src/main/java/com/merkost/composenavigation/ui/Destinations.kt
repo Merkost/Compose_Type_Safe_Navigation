@@ -16,7 +16,7 @@ sealed class Destinations {
     data object Home
 
     @Serializable
-    data object Search
+    data class Search(val searchText: String? = null)
 
     @Serializable
     data object Profile
@@ -27,6 +27,6 @@ sealed class Destinations {
 
 enum class BottomNavigation(val label: String, val icon: ImageVector, val route: Any) {
     HOME("Home", Icons.Filled.Home, Destinations.Home),
-    SEARCH("Search", Icons.Filled.Search, Destinations.Search),
+    SEARCH("Search", Icons.Filled.Search, Destinations.Search()),
     PROFILE("Profile", Icons.Filled.AccountCircle, Destinations.Profile);
 }
