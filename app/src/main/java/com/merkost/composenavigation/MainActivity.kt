@@ -6,19 +6,26 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.navigation.toRoute
+import com.merkost.composenavigation.ui.BottomNavigation
 import com.merkost.composenavigation.ui.Destinations
-import com.merkost.composenavigation.ui.buildRoute
 import com.merkost.composenavigation.ui.screens.HomeScreen
-import com.merkost.composenavigation.ui.screens.ProfileScreen
+import com.merkost.composenavigation.ui.screens.ProfileInfoScreen
 import com.merkost.composenavigation.ui.theme.ComposeTypeSafeNavigationTheme
 
 class MainActivity : ComponentActivity() {
@@ -30,27 +37,64 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController()
 
-                Scaffold {
+                Scaffold(
+                    bottomBar = {
+                        BottomAppBar {
+                            BottomNavigation.entries
+                                .forEachIndexed { index, navigationItem ->
+
+                                    val isSelected by remember {
+                                        mutableStateOf(false)
+                                    }
+
+                                    NavigationBarItem(
+                                        selected = isSelected,
+                                        label = { Text(navigationItem.label) },
+                                        icon = {
+                                            Icon(
+                                                navigationItem.icon,
+                                                contentDescription = navigationItem.label
+                                            )
+                                        },
+                                        onClick = {
+                                            navController.navigate(navigationItem.route)
+                                        }
+                                    )
+                                }
+                        }
+                    }
+                ) {
                     NavHost(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(it),
                         navController = navController,
-                        startDestination = Destinations.HOME.route
+                        startDestination = Destinations.HomeGraph
                     ) {
-                        composable(route = Destinations.HOME.route) {
-                            HomeScreen(
-                                toProfileScreen = {
-                                    navController.navigate(Destinations.PROFILE.buildRoute("101"))
-                                }
-                            )
+                        navigation<Destinations.HomeGraph>(
+                            startDestination = Destinations.Home,
+                        ) {
+
+                            composable<Destinations.Home> {
+                                HomeScreen(
+                                    toProfileScreen = {
+                                        navController.navigate(Destinations.ProfileInfo("101"))
+                                    }
+                                )
+                            }
+
+                            composable<Destinations.Search> {
+                                Greeting("Search")
+                            }
+
+                            composable<Destinations.Profile> { backStackEntry ->
+                                Greeting("Profile")
+                            }
                         }
-                        composable(
-                            route = Destinations.PROFILE.route,
-                            arguments = listOf(navArgument("userId") { defaultValue = "" })
-                        ) { backStackEntry ->
-                            val userId = backStackEntry.arguments?.getString("userId")
-                            ProfileScreen(userId = userId)
+
+                        composable<Destinations.ProfileInfo> { backStackEntry ->
+                            val profileInfo = backStackEntry.toRoute<Destinations.ProfileInfo>()
+                            ProfileInfoScreen(userId = profileInfo.userId)
                         }
                     }
                 }
