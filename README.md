@@ -1,4 +1,5 @@
-<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*551ixPx-c1NcroJydCZi0w.png" alt="Type Safe Bottom Navigation" style="width:100%; max-width:300px; height:auto;">
+<img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*551ixPx-c1NcroJydCZi0w.png" alt="Type Safe Bottom Navigation" style="width:100%; max-width:200px; height:auto;">
+
 # Type Safe Bottom Navigation in Jetpack Compose
 
 ## Introduction
