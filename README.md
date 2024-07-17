@@ -1,5 +1,5 @@
-<p align="center">
-  <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*551ixPx-c1NcroJydCZi0w.png" alt="Type Safe Bottom Navigation" width="600">
+<p align="left">
+  <img src="https://miro.medium.com/v2/resize:fit:1400/format:webp/1*551ixPx-c1NcroJydCZi0w.png" alt="Type Safe Bottom Navigation" width="400">
 </p>
 
 # Type Safe Bottom Navigation in Jetpack Compose
