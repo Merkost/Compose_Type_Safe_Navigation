@@ -10,22 +10,22 @@ import kotlinx.serialization.Serializable
 sealed class Destinations {
 
     @Serializable
-    data object HomeGraph
+    data object HomeGraph: Destinations()
 
     @Serializable
-    data object Home
+    data object Home: Destinations()
 
     @Serializable
-    data class Search(val searchText: String? = null)
+    data class Search(val searchText: String? = null): Destinations()
 
     @Serializable
-    data object Profile
+    data object Profile: Destinations()
 
     @Serializable
-    data class ProfileInfo(val userId: String)
+    data class ProfileInfo(val userId: String): Destinations()
 }
 
-enum class BottomNavigation(val label: String, val icon: ImageVector, val route: Any) {
+enum class BottomNavigation(val label: String, val icon: ImageVector, val route: Destinations) {
     HOME("Home", Icons.Filled.Home, Destinations.Home),
     SEARCH("Search", Icons.Filled.Search, Destinations.Search()),
     PROFILE("Profile", Icons.Filled.AccountCircle, Destinations.Profile);
