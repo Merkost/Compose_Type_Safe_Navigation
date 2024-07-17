@@ -19,13 +19,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.serialization.generateRouteWithArgs
 import androidx.navigation.toRoute
 import com.merkost.composenavigation.ui.BottomNavigation
 import com.merkost.composenavigation.ui.Destinations
@@ -43,9 +41,13 @@ class MainActivity : ComponentActivity() {
 
                 val navController = rememberNavController()
 
-val navBackStackEntry by navController.currentBackStackEntryAsState()
-val currentRoute = navBackStackEntry?.destination?.route
-    ?: BottomNavigation.HOME::class.qualifiedName.orEmpty()
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+                    ?: BottomNavigation.HOME.route::class.qualifiedName.orEmpty()
+
+                val currentRouteTrimmed by remember(currentRoute) {
+                    derivedStateOf { currentRoute.substringBefore("?") }
+                }
 
                 Scaffold(
                     bottomBar = {
@@ -53,9 +55,11 @@ val currentRoute = navBackStackEntry?.destination?.route
                             BottomNavigation.entries
                                 .forEachIndexed { index, navigationItem ->
 
+
                                     val isSelected by remember(currentRoute) {
-                                        derivedStateOf { currentRoute == navigationItem.route::class.qualifiedName }
+                                        derivedStateOf { currentRouteTrimmed == navigationItem.route::class.qualifiedName }
                                     }
+
 
                                     NavigationBarItem(
                                         selected = isSelected,
