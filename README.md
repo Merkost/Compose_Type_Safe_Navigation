@@ -1,3 +1,4 @@
+![Type Safe Bottom Navigation](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*551ixPx-c1NcroJydCZi0w.png)
 # Type Safe Bottom Navigation in Jetpack Compose
 
 ## Introduction
